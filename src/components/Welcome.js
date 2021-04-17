@@ -1,18 +1,19 @@
-// import logo from "../img/logo.png";
+import Logo from "../img/Logo.png";
 
-const About = () => {
+const Welcome = () => {
     return (
         <div className="text-center">
-            <h1>Welcome to Ven-U!</h1>
             <br></br>
-            <p>
-                Hello and welcome to CodeTrack!
-            </p>
+            <h1>Welcome to CodeTrack</h1>
+                <img
+                src={[Logo]} 
+                width="800"
+                height="900"
+                ></img>
             <br></br>
-            {/* <img src={logo}></img> */}
         </div>
     )
 }
 
         
-export default About; 
+export default Welcome; 
