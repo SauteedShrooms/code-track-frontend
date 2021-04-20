@@ -7,28 +7,21 @@ import {
 } from "react-router-dom";
 import Welcome from "./components/Welcome";
 import TopNav from "./components/TopNav";
-import CarContainer from "./containers/CarContainer"
+import NewCarContainer from "./containers/NewCarContainer"
 import LoginForm from "./components/LoginForm";
 import Logout from "./components/Logout";
-import "bootstrap/dist/css/bootstrap.min.css";
-import "semantic-ui-css/semantic.min.css";
-import { Container } from "semantic-ui-react";
+import SignupForm from "./components/SignupForm";
+import Profile from "./components/Profile"
 
+import { Container } from "semantic-ui-react";
 
 class App extends Component {
   
-  constructor(props) {
-    super(props);
-
-    const storedUser = localStorage.getItem("user");
-    const user = storedUser ? JSON.parse(storedUser) : null;
-
-    this.state = {
-      view: "/",
-      user,
-    };
+  state = {
+    user: "",
+    isLoggedIn: false,
   }
-
+     
   login = (user) => {
     localStorage.setItem("user", JSON.stringify(user));
     this.setState({ user });
@@ -39,63 +32,61 @@ class App extends Component {
     this.setState({ user: null });
   };
 
-  render() {
+  render(){
+    // console.log("hello")
     return (
-      <Container>
+      <div className="App">
+        <Container>
+        <TopNav isLoggedIn={this.state.isLoggedIn} />
+
         <Router>
-          <div className="app">
-            <TopNav />
-            <Switch>
-              <Route
-                exact path="/login"
-                render={(routeProps) => (
-                  <LoginForm login={this.login} {...routeProps} />
-                )}
-              />
-              {!this.state.user && (
-                <Route path="/">
-                  <Redirect to="/login" />
-                </Route>
-              )}
-              {this.state.user && (
-                <Route exact path="/">
-                  <Redirect to="/welcome" />
-                </Route>
-              )}
-              <Route exact path="/welcome" component={Welcome} />
-              <Route
-                exact
-                path="/cars"
-                render={(routeProps) => (
-                  <CarContainer user={this.state.user} {...routeProps} />
-                )}
-              />
-              {/* <Route
-                exact
-                path="/tickets"
-                render={(routeProps) => (
-                  <TicketContainer user={this.state.user} {...routeProps} />
-                )}
-              />
-              <Route exact path="/profiles" component={ProfileContainer} />
-              <Route
-                exact
-                path="/hostevent"
-                render={(routeProps) => (
-                  <ArtistContainer user={this.state.user} {...routeProps} />
-                )}
-              /> */}
-              <Route
-                exact
-                path="/logout"
-                render={(routeProps) => (
-                  <Logout logout={this.logout} {...routeProps} />
-                )}
-              />
-            </Switch>
-          </div>
+          <Switch>
+            <Route exact path='/'>
+              <Welcome />
+            </Route>
+
+            <Route path='/newcar'>
+              <NewCarContainer />
+            </Route>
+
+            {/* <Route path='/mycars'>
+              <MyCarsContainer />
+            </Route>
+            
+            <Route path='/race'>
+              <RaceContainer />
+            </Route> */}
+
+            <Route path='/profile'>
+              <Profile  />
+            </Route>
+            
+            <Route path='/login'>
+              <LoginForm isLoggedIn={this.isLoggedIn} login={this.login}  />
+            </Route>
+
+            <Route 
+            path='/logout'
+            render={(routeProps) => (
+              <Logout logout={this.logout} {...routeProps} />
+            )}
+            />
+
+            <Route 
+            path='/signup'
+            render={(routerProps) => (
+              <SignupForm isLoggedIn={this.isLoggedIn} login={this.login} />
+            )}
+            />
+
+            <Route>
+              <Redirect to='/' />
+            </Route>
+          </Switch>
         </Router>
-      </Container>
+
+        </Container>
+      </div>
     );
   }
 

@@ -1,9 +1,8 @@
 import React from 'react'
-import Profile from '../components/Profile'
 import { Grid, Container, Item, Header, List } from 'semantic-ui-react'
 
 
-const userData = 'http://localhost:3001/users/'
+const userData = 'http://localhost:3000/users/'
 
 
 class ProfileContainer extends React.Component {
@@ -43,3 +42,4 @@ class ProfileContainer extends React.Component {
 
    
 }
+export default ProfileContainer;

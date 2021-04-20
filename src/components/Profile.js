@@ -1,9 +1,10 @@
-import React, { Component } from 'react'
-import ProfileContainer from '../containers/ProfileContainer'
-import { Grid, Item, Header, Divider } from 'semantic-ui-react'
+import React from 'react'
+import { Image, Grid, Item, Header } from 'semantic-ui-react'
 
 
-const Profile = ({user}) => {
+const Profile = () => {
+
+  let user = JSON.parse(window.localStorage.getItem("user"))
 
   return(
     <Grid celled>
@@ -12,11 +13,9 @@ const Profile = ({user}) => {
           <Header>
             {user.name}
           </Header>
+          <Image>{user.avatar}</Image>
           <Item>Age: {user.age}</Item>
           <Item>Email: {user.email}</Item>
-          <Item>{user.artista}</Item>
-          <Divider hidden />
-          <Item.Description>{user.bio}</Item.Description>
         </Grid.Column>
       </Grid.Row>
     </Grid>
