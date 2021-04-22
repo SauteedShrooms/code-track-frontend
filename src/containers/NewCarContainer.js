@@ -16,9 +16,9 @@ import {
   Image,
   Button,
   Item,
-  Dimmer,
-  Divider,
 } from "semantic-ui-react";
+import { Form, Col } from "react-bootstrap";
+
 
 const bodiesData = "http://localhost:3000/bodies"
 const paintsData = "http://localhost:3000/paints"
@@ -35,6 +35,9 @@ class NewCarContainer extends React.Component {
     cars: [],
     selectedPart: "",
     selectedCarPart: {},
+    partOne: {},
+    partTwo: {},
+    partThree: {},
   };
 
   componentDidMount() {
@@ -43,55 +46,55 @@ class NewCarContainer extends React.Component {
         Authorization: `Bearer ${this.props.user}`,
       },
     };
-
     fetch(bodiesData, options)
       .then((res) => {
         if (res.ok) {
           return res.json();
         }
-
         return Promise.reject(res.status);
       })
       .then((bodies) => this.setState({ bodies }));
-    
     fetch(paintsData, options)
       .then((res) => {
         if (res.ok) {
           return res.json();
         }
-
         return Promise.reject(res.status);
       })
       .then((paints) => this.setState({ paints }));
-
     fetch(wheelsData, options)
       .then((res) => {
         if (res.ok) {
           return res.json();
         }
-
         return Promise.reject(res.status);
       })
       .then((wheels) => this.setState({ wheels }));
-    
     fetch(spoilersData, options)
       .then((res) => {
         if (res.ok) {
           return res.json();
         }
-
         return Promise.reject(res.status);
       })
       .then((spoilers) => this.setState({ spoilers }));
   }
 
+
   selectCarPart = (selectedCarPart) => {
     this.setState({selectedCarPart: selectedCarPart})
   }
 
-  // applySelectedPart = () => {
-  //   this.state.selectedCarPart
-  // }
+  applySelectedPart = (selectedCarPart) => {
+    if ((this.state.selectedCarPart.partType === "body") || (this.state.selectedCarPart.partType === "paint")) {
+       this.setState({partOne: selectedCarPart})
+    } else if (this.state.selectedCarPart.partType === "wheel") {
+       this.setState({partTwo: selectedCarPart})
+    } else if (this.state.selectedCarPart.partType === "spoiler") {
+       this.setState({partThree: selectedCarPart})
+    }
+  }
+  
 
   render() {
     return (
@@ -103,19 +106,19 @@ class NewCarContainer extends React.Component {
                 <Grid.Column>
                   <Header color="blue" as="h3" textAlign="center">Speed</Header>
                     <Segment textAlign="center" >
-                      61
+                      { this.state.selectedCarPart.speed }
                     </Segment>
                 </Grid.Column>
                 <Grid.Column>
                   <Header color="green" as="h3" textAlign="center">Efficiency</Header>
                     <Segment textAlign="center">
-                      43
+                      { this.state.selectedCarPart.efficency }
                     </Segment>
                 </Grid.Column>
                 <Grid.Column>
                   <Header color="red" as="h3" textAlign="center">Power</Header>
                     <Segment textAlign="center">
-                      84
+                      { this.state.selectedCarPart.power }
                     </Segment>
                 </Grid.Column>
               </Grid.Row> 
@@ -145,12 +148,12 @@ class NewCarContainer extends React.Component {
                 <Header as="h3" textAlign="center">
                   Part Select
                 </Header>
-                <Grid>
+                <>
                   <Image src={this.state.selectedCarPart.image} />
-                  <Button onClick={() => (this.setState({}))} fluid primary type="submit">
+                  <Button onClick={() => (this.applySelectedPart(this.state.selectedCarPart))} fluid primary type="submit">
                     Apply
                   </Button>
-                </Grid>
+                </>
               </Grid.Column>
 
 
@@ -175,17 +178,34 @@ class NewCarContainer extends React.Component {
             <Grid.Row textAlign="center" columns={3}>
               <Grid.Column>
                 Part 1
-                <Image size="small centered" src='https://static.wikia.nocookie.net/villains/images/e/ea/HicksHD2.png/revision/latest?cb=20180410223313' />
+                <Image size="small centered" src={this.state.partOne.image} />
               </Grid.Column>
               <Grid.Column>
                 Part 2
-                <Image size="small centered" src='https://upload.wikimedia.org/wikipedia/en/8/82/Lightning_McQueen.png' />
+                <Image size="small centered" src={this.state.partTwo.image} />
               </Grid.Column>
               <Grid.Column>
                 Part 3
-                <Image size="small centered" src='https://static.wikia.nocookie.net/heroes-and-villians/images/b/b4/IMG_0034.PNG/revision/latest?cb=20171025150220' />
+                <Image size="small centered" src={this.state.partThree.image} />
               </Grid.Column>
             </Grid.Row>
+
+
+            <Grid.Row columns={2} >
+              <Grid.Column>
+                <Header>Finished Car Preview</Header>
+                <p>still needs conditionals to make this work...</p>
+              </Grid.Column>
+              <Grid.Column>
+                <Form>
+                  <Form.Control type="name" placeholder="Name your Car"/>
+                </Form>
+                <Button primary floated="right" type="submit" href="/mycars" >Finish</Button>
+              </Grid.Column>
+            </Grid.Row>
+
+
+
           </Grid>
       </Container>
     );
