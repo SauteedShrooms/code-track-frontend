@@ -13,7 +13,7 @@ const TopNav = ({ view, isLoggedIn }, props ) => {
                 <Navbar.Collapse id="responsive-navbar-nav">
                     <Nav className="mr-auto">
                     <Nav.Link eventKey="newcar" href="/newcar">New Car</Nav.Link>
-                    <Nav.Link eventKey="race" href="/race">Race</Nav.Link>
+                    <Nav.Link eventKey="mycars" href="/mycars">My Cars</Nav.Link>
                     </Nav>
                     <Nav>
                     {

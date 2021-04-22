@@ -1,23 +1,30 @@
 import React from "react";
+// import PartsContainer from "../containers/PartsContainer"
 // import CarCard from "../components/CarCard";
 // import CarDetails from "../components/CarDetails";
+import BodyOptions from "../components/BodyOptions"
+import PaintOptions from "../components/PaintOptions"
+import WheelOptions from "../components/WheelOptions"
+import SpoilerOptions from "../components/SpoilerOptions"
 
 import {
   Grid,
-  Card,
   Container,
   Segment,
-  Transition,
   List,
   Header,
   Image,
+  Button,
+  Item,
+  Dimmer,
+  Divider,
 } from "semantic-ui-react";
 
-const paint = "http://localhost:3001/paints"
-const wheelsData = "http://localhost:3001/wheels"
-const spoilersData = "http://localhost:3001/spoilers"
-const bodiesData = "http://localhost:3001/bodies"
-const carsData = "http://localhost:3001/cars/";
+const bodiesData = "http://localhost:3000/bodies"
+const paintsData = "http://localhost:3000/paints"
+const wheelsData = "http://localhost:3000/wheels"
+const spoilersData = "http://localhost:3000/spoilers"
+const carsData = "http://localhost:3000/cars/";
 
 class NewCarContainer extends React.Component {
   state = {
@@ -26,8 +33,8 @@ class NewCarContainer extends React.Component {
     wheels: [],
     spoilers: [],
     cars: [],
-    selectedCar: "",
-    selected: false,
+    selectedPart: "",
+    selectedCarPart: {},
   };
 
   componentDidMount() {
@@ -37,7 +44,7 @@ class NewCarContainer extends React.Component {
       },
     };
 
-    fetch(carsData, options)
+    fetch(bodiesData, options)
       .then((res) => {
         if (res.ok) {
           return res.json();
@@ -45,9 +52,9 @@ class NewCarContainer extends React.Component {
 
         return Promise.reject(res.status);
       })
-      .then((cars) => this.setState({ cars }));
+      .then((bodies) => this.setState({ bodies }));
     
-    fetch(carsData, options)
+    fetch(paintsData, options)
       .then((res) => {
         if (res.ok) {
           return res.json();
@@ -55,9 +62,9 @@ class NewCarContainer extends React.Component {
 
         return Promise.reject(res.status);
       })
-      .then((cars) => this.setState({ cars }));
+      .then((paints) => this.setState({ paints }));
 
-    fetch(carsData, options)
+    fetch(wheelsData, options)
       .then((res) => {
         if (res.ok) {
           return res.json();
@@ -65,9 +72,9 @@ class NewCarContainer extends React.Component {
 
         return Promise.reject(res.status);
       })
-      .then((cars) => this.setState({ cars }));
+      .then((wheels) => this.setState({ wheels }));
     
-    fetch(carsData, options)
+    fetch(spoilersData, options)
       .then((res) => {
         if (res.ok) {
           return res.json();
@@ -75,23 +82,24 @@ class NewCarContainer extends React.Component {
 
         return Promise.reject(res.status);
       })
-      .then((cars) => this.setState({ cars }));
+      .then((spoilers) => this.setState({ spoilers }));
   }
 
-  
+  selectCarPart = (selectedCarPart) => {
+    this.setState({selectedCarPart: selectedCarPart})
+  }
+
+  // applySelectedPart = () => {
+  //   this.state.selectedCarPart
+  // }
 
   render() {
     return (
       <Container>
-        <Transition
-          visible={!this.state.selected}
-          animation="scale"
-          duration={500}
-        >
           <Grid celled id="carPage" >
 
 
-              <Grid.Row columns='equal' >
+               <Grid.Row columns='equal' >
                 <Grid.Column>
                   <Header color="blue" as="h3" textAlign="center">Speed</Header>
                     <Segment textAlign="center" >
@@ -110,43 +118,56 @@ class NewCarContainer extends React.Component {
                       84
                     </Segment>
                 </Grid.Column>
-              </Grid.Row>
+              </Grid.Row> 
 
 
             <Grid.Row columns="3" >
   
               <Grid.Column id="partContainer" >
                 <Header as="h3" textAlign="center">
-                  Parts
+                Car Parts
                 </Header>
-                <List divided relaxed size="large" onClick={console.log()}>
-                 
+
+                <List>
+                    <br></br>
+                    <Button onClick={() => (this.setState({selectedPart: "Bodies"}))} >Body</Button>
+                    <br></br>
+                    <Button onClick={() => (this.setState({selectedPart: "Paints"}))} >Paint</Button>
+                    <br></br>
+                    <Button onClick={() => (this.setState({selectedPart: "Wheels"}))} >Wheels</Button>
+                    <br></br>
+                    <Button onClick={() => (this.setState({selectedPart: "Spoilers"}))} >Spoiler</Button>
                 </List>
+                 
               </Grid.Column>
 
               <Grid.Column id="carContainer" >
                 <Header as="h3" textAlign="center">
-                  CAR
+                  Part Select
                 </Header>
                 <Grid>
-                  <Card.Group >
-                  {/* <Car /> */}
-                    {/* {carList.map((car) => (
-                      <CarCard selectCar={this.selectCar} car={car} history={this.props.history}/>
-                    ))} */}
-                  </Card.Group>
+                  <Image src={this.state.selectedCarPart.image} />
+                  <Button onClick={() => (this.setState({}))} fluid primary type="submit">
+                    Apply
+                  </Button>
                 </Grid>
               </Grid.Column>
+
 
               <Grid.Column id="optionContainer">
                 <Header as="h3" textAlign="center">
                   Options
                 </Header>
-                <List divided relaxed size="large">
-                  {/* {this.state.bodies.map((body) => (
-                    <OptionsContainer  />
-                  ))} */}
-                </List>
+                <Segment size="large" style={{overflow: 'auto', maxHeight: 300 }}>
+                  { this.state.selectedPart === "Bodies" ?
+                      this.state.bodies.map((body) => <BodyOptions selectCarPart={this.selectCarPart} body={body} key={body.id} />) : null }
+                  { this.state.selectedPart === "Paints" ?
+                      this.state.paints.map((paint) => <PaintOptions selectCarPart={this.selectCarPart} paint={paint} key={paint.id} />) : null }
+                  { this.state.selectedPart === "Wheels" ?
+                      this.state.wheels.map((wheel) => <WheelOptions selectCarPart={this.selectCarPart} wheel={wheel} key={wheel.id} />) : null }
+                  { this.state.selectedPart === "Spoilers" ?
+                      this.state.spoilers.map((spoiler) => <SpoilerOptions selectCarPart={this.selectCarPart} spoiler={spoiler} key={spoiler.id} />) : null }  
+                </Segment>
               </Grid.Column>
             </Grid.Row>
 
@@ -166,7 +187,6 @@ class NewCarContainer extends React.Component {
               </Grid.Column>
             </Grid.Row>
           </Grid>
-        </Transition>
       </Container>
     );
   }
