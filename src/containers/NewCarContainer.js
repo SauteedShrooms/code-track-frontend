@@ -79,6 +79,14 @@ class NewCarContainer extends React.Component {
         return Promise.reject(res.status);
       })
       .then((spoilers) => this.setState({ spoilers }));
+      fetch(carsData, options)
+      .then((res) => {
+        if (res.ok) {
+          return res.json();
+        }
+        return Promise.reject(res.status);
+      })
+      .then((cars) => this.setState({ cars }));
   }
 
   // selectPaintOption = (selectedCarPart) => {
@@ -107,11 +115,11 @@ class NewCarContainer extends React.Component {
 
     let newCar = {
       user_id: this.props.user.id,
-      carName: this.state.carName,
-      body: this.state.selectedBody.id,
-      paint: this.state.selectedPaint.id,
-      wheel: this.state.selectedWheel.id,
-      spoiler: this.state.selectedSpoiler.id,
+      name: this.state.name,
+      body_id: this.state.selectedBody.id,
+      paint_id: this.state.selectedPaint.id,
+      wheel_id: this.state.selectedWheel.id,
+      spoiler_id: this.state.selectedSpoiler.id,
       image: `${this.state.selectedBody.name}_(${this.state.selectedPaint.name})_${this.state.selectedWheel.name}_${this.state.selectedSpoiler.name}.jpg`
     };
 
@@ -168,11 +176,11 @@ class NewCarContainer extends React.Component {
                     <br></br>
                     <Button onClick={() => (this.setState({selectedPart: "Bodies"}))} >Body</Button>
                     <br></br>
-                    <Button onClick={() => (this.setState({selectedPart: "Paints"}))} >Paint</Button>
-                    <br></br>
                     <Button onClick={() => (this.setState({selectedPart: "Wheels"}))} >Wheels</Button>
                     <br></br>
                     <Button onClick={() => (this.setState({selectedPart: "Spoilers"}))} >Spoiler</Button>
+                    <br></br>
+                    <Button onClick={() => (this.setState({selectedPart: "Paints"}))} >Paint</Button>
                 </List>
                  
               </Grid.Column>
@@ -194,15 +202,15 @@ class NewCarContainer extends React.Component {
                 <Header as="h3" textAlign="center">
                   Options
                 </Header>
-                <Segment size="large" style={{overflow: 'auto', maxHeight: 300 }}>
+                <Segment style={{overflow: 'auto', maxHeight: 300 }}>
                   { this.state.selectedPart === "Bodies" ?
                       this.state.bodies.map((body) => <BodyOptions selectCarPart={this.selectCarPart} body={body} key={body.id} />) : null }
-                  { this.state.selectedPart === "Paints" ?
-                      this.state.paints.map((paint) => <PaintOptions selectCarPart={this.selectCarPart} paint={paint} key={paint.id} />) : null }
                   { this.state.selectedPart === "Wheels" ?
                       this.state.wheels.map((wheel) => <WheelOptions selectCarPart={this.selectCarPart} wheel={wheel} key={wheel.id} />) : null }
                   { this.state.selectedPart === "Spoilers" ?
                       this.state.spoilers.map((spoiler) => <SpoilerOptions selectCarPart={this.selectCarPart} spoiler={spoiler} key={spoiler.id} />) : null }  
+                  { this.state.selectedPart === "Paints" ?
+                      this.state.paints.map((paint) => <PaintOptions selectCarPart={this.selectCarPart} paint={paint} key={paint.id} />) : null }
                 </Segment>
               </Grid.Column>
             </Grid.Row>
@@ -211,7 +219,7 @@ class NewCarContainer extends React.Component {
             <Grid.Row textAlign="center" columns={3}>
               <Grid.Column>
                 Part 1
-                <Image size="small centered" src={this.state.selectedPaint.image} />
+                <Image size="small centered" src={this.state.selectedBody.image} />
               </Grid.Column>
               <Grid.Column>
                 Part 2
@@ -226,13 +234,12 @@ class NewCarContainer extends React.Component {
 
             <Grid.Row columns={2} >
               <Grid.Column>
-                <Header>Finished Car Preview</Header>
+                <Header textAlign="center" >Finished Car Preview</Header>
                 <Image src={`http://localhost:3000/Picture files/${this.state.selectedBody.name}_(${this.state.selectedPaint.name})_${this.state.selectedWheel.name}_${this.state.selectedSpoiler.name}.jpg`}/>
-                {/*  */}
               </Grid.Column>
               <Grid.Column>
                 <Form>
-                  <Form.Control onChange={(event) => this.setState({carName: event.target.value})} type="name" placeholder="Name your Car"/>
+                  <Form.Control onChange={(event) => this.setState({name: event.target.value})} type="name" placeholder="Name your Car"/>
                 </Form>
                 <Button onClick={this.handleSubmit} primary floated="right" type="submit" href="/mycars" >Finish</Button>
               </Grid.Column>

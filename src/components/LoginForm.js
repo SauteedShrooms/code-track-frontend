@@ -1,6 +1,5 @@
 import React from "react";
 import { Form, Button } from "react-bootstrap";
-
 import { withRouter } from 'react-router';
 
 
@@ -22,11 +21,6 @@ class LoginForm extends React.Component {
     this.setState({ password, error: '' });
   };
 
-  updateLogin = (props) => {
-    this.setState({
-      isLoggedIn: !props.isLoggedIn
-    })
-  }
 
   handleSubmit = (event) => {
     event.preventDefault();
@@ -56,7 +50,8 @@ class LoginForm extends React.Component {
     })
     .then((user) => {
         console.log(user)
-        this.props.login(user.user);
+        this.props.login(user.user)
+        this.props.setUserState(user.user)
         
       })
       .catch(({ error }) => {
@@ -98,7 +93,6 @@ class LoginForm extends React.Component {
         );
       }         
     };
-
 
 export default LoginForm;
 

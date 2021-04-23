@@ -46,18 +46,11 @@ class SigupForm extends Component {
     fetch(userData, reqObj)
       .then((res) => res.json())
       .then((_) => {
-        this.props.history.push('/login')
-      });
-    };
-      
-    // fetch(loginData, reqObj)
-    //   .then((res) => res.json())
-    //   .then((user) => {
-    //     this.props.login(user.user);
-    //     this.props.history.push('/profile')
-    //   });
-    
 
+      });
+    event.target.reset()
+  };
+      
   render() {
     return (
       <Form onSubmit={this.handleSubmit}>
@@ -117,8 +110,11 @@ class SigupForm extends Component {
           </Form.Group>
 
         </Form.Row>
-        <Button variant="primary" type="submit">
-          Create Account
+        <Button 
+        variant="primary" 
+        type="submit"
+        >
+        Create Account
         </Button>
       </Form>
     );
