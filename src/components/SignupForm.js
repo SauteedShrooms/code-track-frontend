@@ -1,9 +1,8 @@
 import React, { Component } from "react";
 import { Form, Button, Col } from "react-bootstrap";
-
 import { withRouter } from "react-router";
 
-// let loginData = "http://localhost:3000/login";
+
 let userData = "http://localhost:3000/users";
 
 class SigupForm extends Component {
@@ -24,10 +23,6 @@ class SigupForm extends Component {
       email: "",
     });
   };
-
-  updateLogin = () => {
-    this.props.isLoggedIn(false)
-  }
 
   handleSubmit = (event) => {
     event.preventDefault();
@@ -53,7 +48,8 @@ class SigupForm extends Component {
       .then((_) => {
         this.props.history.push('/login')
       });
-
+    };
+      
     // fetch(loginData, reqObj)
     //   .then((res) => res.json())
     //   .then((user) => {
@@ -61,7 +57,6 @@ class SigupForm extends Component {
     //     this.props.history.push('/profile')
     //   });
     
-  };
 
   render() {
     return (

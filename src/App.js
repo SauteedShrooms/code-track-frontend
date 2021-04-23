@@ -1,25 +1,27 @@
 import React, { Component } from "react";
 import {
-  BrowserRouter as Router,
+  Router,
   Route,
   Switch,
   Redirect,
-} from "react-router-dom";
+} from "react-router";
+import history from "./history";
 import Welcome from "./components/Welcome";
 import TopNav from "./components/TopNav";
 import NewCarContainer from "./containers/NewCarContainer"
+import MyCars from "./components/MyCars"
 import LoginForm from "./components/LoginForm";
 import Logout from "./components/Logout";
 import SignupForm from "./components/SignupForm";
 import Profile from "./components/Profile"
 
 import { Container } from "semantic-ui-react";
+import MyCarsContainer from "./containers/MyCarsContainer";
 
 class App extends Component {
   
   state = {
-    user: "",
-    isLoggedIn: false,
+    user: null,
   }
      
   login = (user) => {
@@ -39,50 +41,26 @@ class App extends Component {
         <Container>
         <TopNav isLoggedIn={this.state.isLoggedIn} />
 
-        <Router>
-          <Switch>
-            <Route exact path='/'>
-              <Welcome />
-            </Route>
+        <Router history={history}>
+          
+            <Route exact path='/' component={props => <Welcome {...props} />} />
 
-            <Route path='/newcar'>
-              <NewCarContainer />
-            </Route>
+            <Route exact path='/newcar' component={props => <NewCarContainer {...props} user={this.state.user} />} />
 
-            {/* <Route path='/mycars'>
-              <MyCarsContainer />
-            </Route>
+            <Route exact path='/mycars' component={props => <MyCarsContainer {...props} user={this.state.user} />} />
             
-            <Route path='/race'>
+            {/* <Route path='/race'>
               <RaceContainer />
             </Route> */}
 
-            <Route path='/profile'>
-              <Profile  />
-            </Route>
+            <Route exact path='/profile' component={props => <Profile {...props} />} />
+                          
+            <Route exact path='/login' component={props => <LoginForm login={this.login} {...props} />} />
+
+            <Route exact path='/logout' component={props => <Logout logout={this.logout} {...props} />} />
             
-            <Route path='/login'>
-              <LoginForm isLoggedIn={this.isLoggedIn} login={this.login}  />
-            </Route>
-
-            <Route 
-            path='/logout'
-            render={(routeProps) => (
-              <Logout logout={this.logout} {...routeProps} />
-            )}
-            />
-
-            <Route 
-            path='/signup'
-            render={(routerProps) => (
-              <SignupForm isLoggedIn={this.isLoggedIn} login={this.login} />
-            )}
-            />
-
-            <Route>
-              <Redirect to='/' />
-            </Route>
-          </Switch>
+            <Route exact path='/signup' component={props => <SignupForm login={this.login} {...props} />} />
+          
         </Router>
 
         </Container>

@@ -16,15 +16,11 @@ const TopNav = ({ view, isLoggedIn }, props ) => {
                     <Nav.Link eventKey="mycars" href="/mycars">My Cars</Nav.Link>
                     </Nav>
                     <Nav>
-                    {
-                        props.isLoggedIn ? 
-                        null
-                        :
-                        <>
+                    
                         <Nav.Link eventKey="login" href="/login">Login</Nav.Link>
                         <Nav.Link eventKey="signup" href="/signup">Signup</Nav.Link>
-                        </>
-                    }
+                    
+                   
 
                     <NavDropdown title="Account" id="collasible-nav-dropdown">
                         <NavDropdown.Item eventKey="profile" href="/profile">My Profile</NavDropdown.Item>

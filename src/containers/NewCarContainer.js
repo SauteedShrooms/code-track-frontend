@@ -1,11 +1,9 @@
 import React from "react";
-// import PartsContainer from "../containers/PartsContainer"
-// import CarCard from "../components/CarCard";
-// import CarDetails from "../components/CarDetails";
 import BodyOptions from "../components/BodyOptions"
 import PaintOptions from "../components/PaintOptions"
 import WheelOptions from "../components/WheelOptions"
 import SpoilerOptions from "../components/SpoilerOptions"
+
 
 import {
   Grid,
@@ -17,7 +15,7 @@ import {
   Button,
   Item,
 } from "semantic-ui-react";
-import { Form, Col } from "react-bootstrap";
+import { Form } from "react-bootstrap";
 
 
 const bodiesData = "http://localhost:3000/bodies"
@@ -27,6 +25,7 @@ const spoilersData = "http://localhost:3000/spoilers"
 const carsData = "http://localhost:3000/cars/";
 
 class NewCarContainer extends React.Component {
+  
   state = {
     bodies: [],
     paints: [],
@@ -34,16 +33,18 @@ class NewCarContainer extends React.Component {
     spoilers: [],
     cars: [],
     selectedPart: "",
+    carName: "",
     selectedCarPart: {},
-    partOne: {},
-    partTwo: {},
-    partThree: {},
+    selectedBody: {},
+    selectedPaint: {},
+    selectedWheel: {},
+    selectedSpoiler: {},
   };
 
   componentDidMount() {
     const options = {
       headers: {
-        Authorization: `Bearer ${this.props.user}`,
+        Authorization: `Bearer ${localStorage.auth_key}`,
       },
     };
     fetch(bodiesData, options)
@@ -80,25 +81,57 @@ class NewCarContainer extends React.Component {
       .then((spoilers) => this.setState({ spoilers }));
   }
 
+  // selectPaintOption = (selectedCarPart) => {
+  //   if (this.state.selectedBody.name === "Sports Car")
+  //      
+  // }
 
   selectCarPart = (selectedCarPart) => {
     this.setState({selectedCarPart: selectedCarPart})
   }
 
   applySelectedPart = (selectedCarPart) => {
-    if ((this.state.selectedCarPart.partType === "body") || (this.state.selectedCarPart.partType === "paint")) {
-       this.setState({partOne: selectedCarPart})
+    if (this.state.selectedCarPart.partType === "body") {
+       this.setState({selectedBody: selectedCarPart})
+    } else if (this.state.selectedCarPart.partType === "paint") {
+       this.setState({selectedPaint: selectedCarPart}) 
     } else if (this.state.selectedCarPart.partType === "wheel") {
-       this.setState({partTwo: selectedCarPart})
+       this.setState({selectedWheel: selectedCarPart})
     } else if (this.state.selectedCarPart.partType === "spoiler") {
-       this.setState({partThree: selectedCarPart})
+       this.setState({selectedSpoiler: selectedCarPart})
     }
   }
-  
 
-  render() {
-    return (
-      <Container>
+  handleSubmit = (e) => {
+    e.preventDefault();
+
+    let newCar = {
+      user_id: this.props.user.id,
+      carName: this.state.carName,
+      body: this.state.selectedBody.id,
+      paint: this.state.selectedPaint.id,
+      wheel: this.state.selectedWheel.id,
+      spoiler: this.state.selectedSpoiler.id,
+      image: `${this.state.selectedBody.name}_(${this.state.selectedPaint.name})_${this.state.selectedWheel.name}_${this.state.selectedSpoiler.name}.jpg`
+    };
+
+    let reqObj = {
+      headers: {"Content-Type": "application/json"},
+      method: "POST",
+      body: JSON.stringify(newCar),
+    };
+
+    fetch(carsData, reqObj)
+    .then((res) => res.json())
+    .then((_) => {
+      
+    });
+  };
+  
+    
+    render() {
+      return (
+        <Container>
           <Grid celled id="carPage" >
 
 
@@ -178,15 +211,15 @@ class NewCarContainer extends React.Component {
             <Grid.Row textAlign="center" columns={3}>
               <Grid.Column>
                 Part 1
-                <Image size="small centered" src={this.state.partOne.image} />
+                <Image size="small centered" src={this.state.selectedPaint.image} />
               </Grid.Column>
               <Grid.Column>
                 Part 2
-                <Image size="small centered" src={this.state.partTwo.image} />
+                <Image size="small centered" src={this.state.selectedWheel.image} />
               </Grid.Column>
               <Grid.Column>
                 Part 3
-                <Image size="small centered" src={this.state.partThree.image} />
+                <Image size="small centered" src={this.state.selectedSpoiler.image} />
               </Grid.Column>
             </Grid.Row>
 
@@ -194,15 +227,17 @@ class NewCarContainer extends React.Component {
             <Grid.Row columns={2} >
               <Grid.Column>
                 <Header>Finished Car Preview</Header>
-                <p>still needs conditionals to make this work...</p>
+                <Image src={`http://localhost:3000/Picture files/${this.state.selectedBody.name}_(${this.state.selectedPaint.name})_${this.state.selectedWheel.name}_${this.state.selectedSpoiler.name}.jpg`}/>
+                {/*  */}
               </Grid.Column>
               <Grid.Column>
                 <Form>
-                  <Form.Control type="name" placeholder="Name your Car"/>
+                  <Form.Control onChange={(event) => this.setState({carName: event.target.value})} type="name" placeholder="Name your Car"/>
                 </Form>
-                <Button primary floated="right" type="submit" href="/mycars" >Finish</Button>
+                <Button onClick={this.handleSubmit} primary floated="right" type="submit" href="/mycars" >Finish</Button>
               </Grid.Column>
             </Grid.Row>
+            
 
 
 

@@ -43,21 +43,21 @@ class LoginForm extends React.Component {
     };
 
     fetch("http://localhost:3000/login", reqObj)
-      .then((res) => {
-        const jsonPromise = res.json();
-
-        if (res.ok) {
-          return jsonPromise;
-        }
-
-        return jsonPromise.then((error) => {
-          return Promise.reject(error);
-        });
-      })
-      .then((user) => {
+    .then((res) => {
+      const jsonPromise = res.json();
+      
+      if (res.ok) {
+        return jsonPromise;
+      }
+      
+      return jsonPromise.then((error) => {
+        return Promise.reject(error);
+      });
+    })
+    .then((user) => {
+        console.log(user)
         this.props.login(user.user);
-        this.props.history.push("/profile");
-        this.updateLogin();
+        
       })
       .catch(({ error }) => {
         this.setState({
@@ -100,7 +100,7 @@ class LoginForm extends React.Component {
     };
 
 
-export default withRouter(LoginForm);
+export default LoginForm;
 
 // class LoginForm extends React.Component {
   
